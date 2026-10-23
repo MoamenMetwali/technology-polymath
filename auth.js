@@ -2,6 +2,7 @@
 (() => {
   "use strict";
   const cfg = window.TP_SUPABASE_CONFIG || {};
+  const invitedViaLink = /(?:[?#&])type=(?:invite|recovery)(?:&|$)/.test(location.href);
   const authBox = document.getElementById("tp-auth");
   const msg = document.getElementById("tp-auth-error");
   const hint = document.getElementById("tp-auth-hint");
@@ -107,7 +108,7 @@
       };
       account.appendChild(out);
       document.querySelector(".side .subtitle").after(account);
-      if (location.hash.includes("type=invite") || location.search.includes("type=invite") || location.hash.includes("type=recovery")) {
+      if (invitedViaLink) {
         setup.hidden = false;
         loginForm.hidden = true;
         hint.textContent = "Set a password to finish activating your account.";
