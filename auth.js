@@ -20,9 +20,11 @@
   };
   const configured = /^https:\/\/[^/]+\.supabase\.co\/?$/.test(cfg.url || "") && !!cfg.anonKey;
   if (!configured || !window.supabase) {
-    loginForm.hidden = true;
-    say("Authentication setup pending. Configure supabase-config.js with your project's URL and publishable (anon) key.");
-    hint.textContent = "The site is not available until authentication is configured. No account data is sent or exposed.";
+    // While unconfigured, keep the original book usable in local-only mode.
+    // This is not authenticated access: GitHub Pages serves public lesson content.
+    document.documentElement.classList.add("tp-authorized");
+    setLabel("Local progress only — cloud sync not configured");
+    console.info("Technology Polymath: Supabase not configured; local-only mode.");
     return;
   }
   client = window.supabase.createClient(cfg.url, cfg.anonKey, {
@@ -92,7 +94,8 @@
         localStorage.setItem(oldKey, JSON.stringify(state));
         setLabel("Synced to your account");
       }
-      document.documentElement.classList.add("tp-authorized");
+      // Invitation and recovery links must finish password setup before entering.
+      document.documentElement.classList.toggle("tp-authorized", !invitedViaLink);
       showDashboard();
       let account = document.createElement("div");
       account.id = "tp-account";
@@ -144,6 +147,8 @@
       const { error } = await client.auth.updateUser({ password });
       if (error) throw error;
       setup.hidden = true; loginForm.hidden = false;
+      document.documentElement.classList.add("tp-authorized");
+      showDashboard();
       say("");
       hint.textContent = "Password set. Your account is ready.";
       history.replaceState({}, "", location.pathname);
