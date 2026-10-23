@@ -85,7 +85,7 @@
       } else {
         // One-time migration from the pre-auth book, by explicit user consent.
         const hasLocal = Object.values(localCopy).some(v => v && typeof v === "object" && Object.keys(v).length);
-        if (hasLocal && confirm("Import the existing progress stored in this browser into this account? Choose Cancel to start fresh.")) {
+        if (hasLocal && !localStorage.getItem("tp-cloud-ever-used") && confirm("Import the original, pre-account progress stored in this browser into this account? Choose Cancel to start fresh.")) {
           state = localCopy;
         } else {
           state = empty();
@@ -94,6 +94,8 @@
         localStorage.setItem(oldKey, JSON.stringify(state));
         setLabel("Synced to your account");
       }
+      // Never offer an account's cached progress as a migration to another account.
+      localStorage.setItem("tp-cloud-ever-used", "1");
       // Invitation and recovery links must finish password setup before entering.
       document.documentElement.classList.toggle("tp-authorized", !invitedViaLink);
       showDashboard();
