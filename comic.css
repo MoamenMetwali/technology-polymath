@@ -27,3 +27,8 @@
 .comic-collapsed .comic-grid,.comic-collapsed .comic-fact{display:none}
 .dark .comic-shell{--paper:#f8f0dc;--ink:#1e2830}
 @media(max-width:650px){.comic-grid{grid-template-columns:1fr}.comic-panel.wide{grid-column:span 1}.comic-mast{padding:17px;box-shadow:4px 4px 0 var(--ink)}.comic-bubble{max-width:48%}.comic-illustration{font-size:60px}}
+
+.comic-art{display:block;width:100%;max-width:380px;height:190px;object-fit:contain;margin:auto;filter:drop-shadow(0 4px 0 #1e28301a)}
+.comic-scene:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 14px,#ffffff17 15px 17px);pointer-events:none}
+.comic-bubble{z-index:2}
+@media(max-width:650px){.comic-art{height:180px}}
